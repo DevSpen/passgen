@@ -1,0 +1,18 @@
+name: passgen
+version: 0.1.0
+
+authors:
+  - Spen
+
+targets:
+  passgen:
+    main: src/passgen.cr
+
+crystal: 1.5.0
+
+license: MIT
+
+dependencies:
+  commander:
+    github: mrrooijen/commander
+    version: ~> 0.4.0
