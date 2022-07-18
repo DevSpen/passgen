@@ -72,7 +72,7 @@ cli = Commander::Command.new do |cmd|
     end
 
     if chars.size == 0
-      puts "ERROR: ".colorize.fore(:white).back(:red).mode(:bold).to_s + "Please use flags to specify the characters to include using flags."
+      puts "ERROR:".colorize.fore(:white).back(:red).mode(:bold).to_s + " Please use flags to specify the characters to include using flags."
       puts cmd.help
       exit
     end
