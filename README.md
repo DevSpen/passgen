@@ -1,2 +1,2 @@
 # passgen
-A simple password generator CLI example written in Crystal.
+A simple password generator CLI written in Crystal.
