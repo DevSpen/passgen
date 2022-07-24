@@ -1,6 +1,7 @@
 require "commander"
 require "colorize"
 require "./helpers/random_string.cr"
+require "./constants.cr"
 
 cli = Commander::Command.new do |cmd|
   cmd.use = "passgen"
@@ -14,13 +15,22 @@ cli = Commander::Command.new do |cmd|
     flag.description = "The password length."
   end
 
-   cmd.flags.add do |flag|
+  cmd.flags.add do |flag|
     flag.name = "numbers"
     flag.short = "-n"
     flag.long = "--numbers"
     flag.default = false
-    flag.persistent  = true
+    flag.persistent = true
     flag.description = "Whether to include numbers in the password."
+  end
+
+  cmd.flags.add do |flag|
+    flag.name = "all"
+    flag.short = "-a"
+    flag.long = "--all"
+    flag.default = false
+    flag.persistent = true
+    flag.description = "Allow lowercase letter, uppercase letters, symbols, and numbers to be used within the password. Overrides other options."
   end
 
   cmd.flags.add do |flag|
@@ -28,7 +38,7 @@ cli = Commander::Command.new do |cmd|
     flag.short = "-s"
     flag.long = "--symbols"
     flag.default = false
-    flag.persistent  = true
+    flag.persistent = true
     flag.description = "Whether to include special symbols in the password."
   end
 
@@ -37,7 +47,7 @@ cli = Commander::Command.new do |cmd|
     flag.short = "-l"
     flag.long = "--lowercase"
     flag.default = false
-    flag.persistent  = true
+    flag.persistent = true
     flag.description = "Whether to include lowercase letters in the password."
   end
 
@@ -46,7 +56,7 @@ cli = Commander::Command.new do |cmd|
     flag.short = "-u"
     flag.long = "--uppercase"
     flag.default = false
-    flag.persistent  = true
+    flag.persistent = true
     flag.description = "Whether to include uppercase letters in the password."
   end
 
@@ -55,20 +65,26 @@ cli = Commander::Command.new do |cmd|
     len = options.int["length"]
     chars = [] of Char
 
-    if options.bool["numbers"]
-      chars.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9')
-    end
+    unless options.bool["all"]
+      if options.bool["numbers"]
+        chars.concat(NUMBERS)
+      end
 
-    if options.bool["symbols"]
-      chars.push('!', '@', '#', '$', '%', '^', '&', '*', '(', ')')
-    end
+      if options.bool["symbols"]
+        chars.concat(SYMBOLS)
+      end
 
-    if options.bool["lowercase"]
-      chars.push('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')
-    end
+      if options.bool["lowercase"]
+        chars.concat(LOWERCASE)
+      end
 
-    if options.bool["uppercase"]
-      chars.push('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z')
+      if options.bool["uppercase"]
+        chars.concat(UPPERCASE)
+      end
+    else
+      [NUMBERS, SYMBOLS, LOWERCASE, UPPERCASE].each do |arr|
+        chars.concat(arr)
+      end
     end
 
     if chars.size == 0
